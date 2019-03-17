@@ -1,0 +1,128 @@
+﻿<div class="container" ng-controller="UserListController as uc">
+   
+    <h3>
+        Добавить сообщение <button class="btn btn-success btn-sm" ng-if="uc.hasChanges()" ng-click="uc.saveChanges()"><span class="glyphicon glyphicon-thumbs-up"></span> Сохранить изменения</button>
+        <button class="btn btn-danger btn-sm" ng-if="uc.hasChanges()" ng-click="uc.rejectChanges()"><span class="glyphicon glyphicon-thumbs-down"></span> Отменить изменения</button>
+        <button class="btn btn-primary btn-sm" ng-click="uc.refreshData()"><span class="glyphicon glyphicon-refresh"></span> Обновить</button>
+    </h3>
+
+    <form name="formAdd" novalidate>
+        <table class="table table-bordered table-striped">
+            <tbody>
+                <tr class="success">
+                    <td>
+                        <input type="text" ng-minlength="2" class="form-control" name="userName" ng-model="uc.newItem.name" placeholder="Имя" required />
+                        <span style="color:red" ng-show="formAdd.userName.$dirty && formAdd.userName.$invalid">
+                            <span ng-show="formAdd.userName.$error.required">Введите Имя</span>
+                            <span ng-show="formAdd.userName.$error.minlength">Имя дожно быть не меньше 2 символов</span>
+                        </span>
+                    </td>
+                    <td>
+                        <input type="email" ng-minlength="5" class="form-control" name="userEmail" ng-model="uc.newItem.email" placeholder="Email" required />
+                        <span style="color:red" ng-show="formAdd.userEmail.$dirty && formAdd.userEmail.$invalid">
+                            <span ng-show="formAdd.userEmail.$error.required">Введите Email</span>
+                            <span ng-show="formAdd.userEmail.$error.email">Некорректный Email</span>
+                            <span ng-show="formAdd.userEmail.$error.minlength">Email должен быть не меньше 5 символов</span>
+                        </span>
+                    </td>
+                    <td>
+                        <input type="tel" ng-minlength="6" class="form-control" name="userNumber" ng-model="uc.newItem.number" placeholder="Номер" required />
+                        <span style="color:red" ng-show="formAdd.userNumber.$dirty && formAdd.userNumber.$invalid">
+                            <span ng-show="formAdd.userNumber.$error.required">Введите Номер</span>
+                            <span ng-show="formAdd.userNumber.$error.minlength">Номер должен быть не меньше 6 символов</span>
+                        </span>
+                    </td>
+                    <td>
+                        <input type="text" ng-maxlength="50" class="form-control" name="userAddress" ng-model="uc.newItem.address" placeholder="Адрес" required />
+                        <span style="color:red" ng-show="formAdd.userAddress.$dirty && formAdd.userAddress.$invalid">
+                            <span ng-show="formAdd.userAddress.$error.maxlength">Слишком много символов</span>
+                        </span>
+                    </td>
+                    <td>
+                        <input type="text" ng-maxlength="100" name="userDescription" class="form-control" ng-model="uc.newItem.description" placeholder="Описание" required />
+                        <span style="color:red" ng-show="formAdd.userDescription.$invalid">
+                            <span ng-show="formAdd.userDescription.$error.maxlength">Слишком много символов</span>
+                        </span>
+                    </td>
+                    <td>
+                        <input type="datetime-local" class="form-control" name="userDate" ng-model="uc.newItem.date" placeholder="Дата" required />
+                        <span style="color:red" ng-show="formAdd.userDate.$dirty && formAdd.userDate.$invalid">
+                            <span ng-show="formAdd.userDate.$error.required">Введите дату</span>
+                        </span>
+                    </td>
+                    <td>
+                        <input class="form-control" type="submit" ng-click="uc.addNewItem()"
+                               ng-disabled="formAdd.userName.$pristine || (formAdd.userName.$dirty && formAdd.userName.$invalid) ||
+                               formAdd.userEmail.$pristine || (formAdd.userEmail.$dirty && formAdd.userEmail.$invalid) ||
+                               formAdd.userNumber.$pristine || (formAdd.userNumber.$dirty && formAdd.userNumber.$invalid) ||
+                               formAdd.userAddress.$pristine || (formAdd.userAddress.$dirty && formAdd.userAddress.$invalid) ||
+                               formAdd.userDescription.$pristine || (formAdd.userDescription.$dirty && formAdd.userDescription.$invalid) ||
+                               formAdd.userDate.$pristine || (formAdd.userDate.$dirty && formAdd.userDate.$invalid)">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <h3>Список сообщений</h3>
+    <table ng-table="uc.tableParams" class="table table-bordered table-striped">
+        <thead>
+            <tr class="info">
+                <td>
+                    <select class="form-control" ng-model="uc.filterUserName">
+                        <!--ng-change="uc.filterByUserName(uc.filterUserNameName)"-->
+                        <option value="" hidden>Имя</option>
+                        <option ng-repeat="user in uc.users" value="{{user.name}}">{{user.name}} {{user.userRequests.length}}</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" ng-model="uc.filterUserEmail">
+                        <option value="" hidden>Email</option>
+                        <option ng-repeat="user in uc.users" value="{{user.email}}">{{user.email}} {{user.userRequests.length}}</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" ng-model="uc.filterUserNumber">
+                        <option value="" hidden>Номер</option>
+                        <option ng-repeat="user in uc.users" value="{{user.number}}">{{user.number}} {{user.userRequests.length}}</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" ng-model="uc.filterUserRequestAddress">
+                        <option value="" hidden>Адрес</option>
+                        <option ng-repeat="userRequest in uc.userRequests" value="{{userRequest.address}}">{{userRequest.address}} {{user.userRequests.length}}</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" ng-model="uc.filterUserRequestDescription">
+                        <option value="" hidden>Описание</option>
+                        <option ng-repeat="userRequest in uc.userRequests" value="{{userRequest.description}}">{{userRequest.description}} {{user.userRequests.length}}</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" ng-model="uc.filterUserRequestDateDate" ng-change="uc.filterByUserRequestDate(uc.filterUserRequestDateDate)">
+                        <option value="" hidden>Дата</option>
+                        <option ng-repeat="userRequest in uc.userRequests" value="{{userRequest.date.toString()}}">{{userRequest.date.toLocaleString()}} {{user.userRequests.length}}</option>
+                    </select>
+                </td>
+                <td><button class="btn btn-primary" type="button" ng-click="uc.resetFilters()">Сброс  <span class="glyphicon glyphicon-filter"></span></button></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in $data | filter: uc.isItemExists| orderBy:'currentUser.email' ">
+
+                <td>{{item.currentUser.name}}</td>
+                <td>{{item.currentUser.email}}</td>
+                <td>{{item.currentUser.number}}</td>
+                <td>{{item.address}}</td>
+                <td>{{item.description}}</td>
+                <td>{{item.date.toLocaleString()}}</td>
+
+                <td>
+                    <button class="btn btn-warning" type="button" ng-click="uc.editItem(item)"><span class="glyphicon glyphicon-edit"></span></button>
+                    <button class="btn btn-danger" type="button" ng-click="uc.deleteItem(item)"><span class="glyphicon glyphicon-trash"></span></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
